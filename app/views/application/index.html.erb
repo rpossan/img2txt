@@ -1,0 +1,109 @@
+      <!-- Contact Details -->
+      <div class="large-9 columns">
+   
+        <h1>Read it!</h1>
+        <p>Convert any image to text, if <b><em>we can</em></b> of course.</p>
+        <p>Use img2txt on your browser or mobile. We are working on new features. Soon you are going to can translate signs, boards, banners, menus and more</p>
+        <p>Now, take or upload a picture and <em><a src="#">read it!</b></em>.</a>
+
+
+
+
+
+
+        <div class="section-container tabs" data-section>
+          <section class="section">
+            <div class="content" data-slug="panel1">
+              <%= form_tag({action: :read}, multipart: true) do %>
+                <div class="row collapse">
+                  <div class="large-2 columns">
+                    <label class="inline">Picture</label>
+                  </div>
+                  <div class="large-10 columns">
+                    <p>
+                        <input type="file" id="take-picture" accept="image/*" name="picture">
+                    </p>
+
+                    <p id="error"></p>
+                  </div>
+                </div>
+                <div align="center">
+                <button type="submit" class="radius button">Read it!</button>
+                </div>
+              <% end %>
+            </div>
+          </section>
+          <section class="section">
+            <div class="content" data-slug="panel1">
+              <h3 class="title">Result</h3>
+              <%= @txt %>
+            </di>
+          </section>
+        </div>
+      </div>
+   
+
+
+      <!-- End Contact Details -->
+
+            <!-- Sidebar -->
+   
+   
+      <div class="large-3 columns">
+        <h5>Picture Preview:</h5>
+        <p>
+            <img src="about:blank" alt="" id="show-picture">
+        </p>
+      </div>
+      <!-- End Sidebar -->
+
+      <script type="text/javascript">
+
+        (function () {
+            var takePicture = document.querySelector("#take-picture"),
+                showPicture = document.querySelector("#show-picture");
+
+            if (takePicture && showPicture) {
+                // Set events
+                takePicture.onchange = function (event) {
+                    // Get a reference to the taken picture or chosen file
+                    var files = event.target.files,
+                        file;
+                    if (files && files.length > 0) {
+                        file = files[0];
+                        try {
+                            // Get window.URL object
+                            var URL = window.URL || window.webkitURL;
+
+                            // Create ObjectURL
+                            var imgURL = URL.createObjectURL(file);
+
+                            // Set img src to ObjectURL
+                            showPicture.src = imgURL;
+
+                            // Revoke ObjectURL
+                            URL.revokeObjectURL(imgURL);
+                        }
+                        catch (e) {
+                            try {
+                                // Fallback if createObjectURL is not supported
+                                var fileReader = new FileReader();
+                                fileReader.onload = function (event) {
+                                    showPicture.src = event.target.result;
+                                };
+                                fileReader.readAsDataURL(file);
+                            }
+                            catch (e) {
+                                //
+                                var error = document.querySelector("#error");
+                                if (error) {
+                                    error.innerHTML = "Neither createObjectURL or FileReader are supported";
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        })();
+
+      </script>
